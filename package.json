@@ -1,5 +1,5 @@
 {
-  "name": "overwatch-stats",
+  "name": "discord-overwatch-stats",
   "version": "0.0.1",
   "dependencies": {
     "cheerio": "^0.20.0",
