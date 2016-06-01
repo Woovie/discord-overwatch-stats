@@ -33,7 +33,7 @@ discord.on('message', (message) => { //A message was sent in a Discord channel
             let time = $(hero).find('.description').text(); //Scrapes time played
             data.push({name: name, time: time}); //Pushes hero to data list
         }
-        let str = "```" + name + (name.endsWith("s") ? "'" : "'s") + " Overwatch rank is: " + rank + ". Top heroes are: ```"; //Top line
+        let str = "```" + name + (name.endsWith("s") ? "'" : "'s") + " Overwatch level is: " + rank + ". Top heroes are: ```"; //Top line
         for (let i = 0; i < data.length; i++) {
             str += "\n``" + (i + 1) + ".``**" + data[i].name + "** - " + data[i].time; //Enumerated stats
         }
