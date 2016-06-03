@@ -1,38 +1,65 @@
+/*
+Watcher.gg stats bot for Overwatch
+
+Initial version by dbkynd which scraped playeroverwatch.com manually
+Github here: https://github.com/dbkynd/discord-overwatch-stats
+
+Forked by Woovie to work with watcher.gg API https://api.watcher.gg/players/pc/us/woovie%231582
+Github here: https://github.com/Woovie/discord-overwatch-stats
+*/
+
 'use strict';
-const Discord = require('discord.js'), //Discord module
-    request = require("request");
+const Discord = require('discord.js'),
+request = require("request");
 
-var discord = new Discord.Client(); //New discord client
-var trigger_prefix = "!ow";
+//Global variables
+var discord = new Discord.Client();
+discord.loginWithToken("MTg3NjU2ODU5NzUzMjUwODE3.CjDQkg.tgkYufbspBUsDs2T89ym7bKNLRU"); //Login using a Discord 'BOT' account token
 
-discord.loginWithToken(""); //Login using a Discord 'BOT' account token
+//Overwatch specific variables
+var overwatch_prefix = "!ow";
+
+//Global functions
+function numberWithCommas(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function round000(number) {
+    return (Math.round(number * 1000) / 1000);
+}
 
 discord.on('ready', () => { //The discord client has connected
     console.log("Successful connection to Discord as '" + discord.user.username + "'");
 });
 
-discord.on('message', (message) => { //A message was sent in a Discord channel
-    if (message.author.id == discord.user.id) return; //Exit if message is from self(bot)
-    if (!message.content.startsWith(trigger_prefix)) return; //Exit if the message doesn't start with our trigger word
-    let tag = message.content.substring(trigger_prefix.length, message.length).trim(); //Remove trigger prefix and remove space
-    if (tag == "") return discord.sendMessage(message, "``" + trigger_prefix + " name#id``"); //Show usage if no name is passed
-    let url = encodeURI("https://api.watcher.gg/players/pc/us/" + tag).replace("#", "%23"); //URL for grabbing player data from API
-    let url_pub = encodeURI("https://watcher.gg/profile/pc/us/" + tag).replace("#", "%23"); //URL for public linking
-    let name = tag.split('#')[0]; //Get name from tag for messages
-    request.get(url, function (err, res, body) { //Get the URL contents
-        let data = JSON.parse(body); //Parse the contents to a JSON table
-        let code = data.statusCode; //Get the status code for error checking
-        if ( code != 200 ) { //If we get something other than a 200 OK
+//Overwatch stats function
+discord.on('message', (message) => {
+    if (message.author.id == discord.user.id) return;
+    if (!message.content.startsWith(overwatch_prefix)) return;
+    let tag = message.content.substring(overwatch_prefix.length, message.length).trim();
+    if (tag == "") return discord.sendMessage(message, "``" + overwatch_prefix + " name#id``");
+    let url = encodeURI("https://api.watcher.gg/players/pc/us/" + tag).replace("#", "%23");
+    let url_pub = encodeURI("https://watcher.gg/profile/pc/us/" + tag).replace("#", "%23");
+    let name = tag.split('#')[0];
+    request.get(url, function (err, res, body) {
+        let data = JSON.parse(body);
+        let code = data.statusCode;
+        if ( code != 200 ) {
             return discord.sendMessage(message, "Error getting stats for ``" + name + "``");
         } else {
-            let str = "Watcher.gg Stats for " + tag + "\n";
-            str += "```Score/sec: " + String ( Math.round ( data.data.heroStats[0].score / data.data.heroStats[0].timePlayed * 1000 ) / 1000 ) + " Rank: #"  + numberWithCommas ( data.data.ranks[0].ranks.averageScore ) + "\n"; //Calculate score per second and display player rank overall for US
-            str += "Total Score: " + numberWithCommas ( data.data.heroStats[0].score ) + " Total Time Played: ~" + data.data.heroStats[0].timePlayed/60/60 + " hours\n"; //Display raw score and hours played
-            str += "View the full page here: " + url_pub; //Send a URL at the end to the watcher.gg page of this player
+            let player = [];
+            player.level = data.data.player.level;
+            player.lastUpdated = data.data.player.lastUpdated;
+            player.score = data.data.heroStats[0].score;
+            player.timePlayed = data.data.heroStats[0].timePlayed;
+            player.scorePerSecond = player.score / player.timePlayed;
+            player.scoreRank = data.data.ranks[0].ranks.averageScore;
+            player.timePlayedHours = player.timePlayed / 3600;
+            let str = "Watcher.gg Stats for **" + tag + "**\n";
+            str += "**Score/sec:** " + round000(player.scorePerSecond) + " **Rank:** #"  + numberWithCommas(player.scoreRank) + "\n";
+            str += "**Total Score:** " + numberWithCommas(player.score) + " **Total Time Played:** ~" + player.timePlayedHours + " hours\n";
+            str += "View the full page here: " + url_pub;
             return discord.sendMessage ( message, str );
         }
     });
 });
-function numberWithCommas(number) { //This function turns 999999999 into 999,999,999
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
