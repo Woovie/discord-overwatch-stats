@@ -14,7 +14,7 @@ request = require("request");
 
 //Global variables
 var discord = new Discord.Client();
-discord.loginWithToken("MTg3NjU2ODU5NzUzMjUwODE3.CjDQkg.tgkYufbspBUsDs2T89ym7bKNLRU"); //Login using a Discord 'BOT' account token
+discord.loginWithToken(""); //Login using a Discord 'BOT' account token
 
 //Overwatch specific variables
 var overwatch_prefix = "!ow";
