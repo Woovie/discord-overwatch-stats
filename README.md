@@ -1,7 +1,8 @@
 # Discord Overwatch Stats
 Displays various stats about a player including score rank, total score, time played, score/sec, and top 3 hero stats based on score.
+Scrapes https://watcher.gg/ JSON API for statistics.
 
-Scrapes the https://watcher.gg/ JSON API for statistics.
+If you want to use this bot on your server without the need to host it yourself, you can use this invite URL: https://discordapp.com/oauth2/authorize?client_id=187656769567326217&scope=bot&permissions=0
 
 1. Install node.js and make sure it is available via PATH
 2. Run ``npm install`` in the same folder as package.json
