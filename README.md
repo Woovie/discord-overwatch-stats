@@ -1,11 +1,11 @@
 # Discord Overwatch Stats
-Show rank and time played on top heroes in Discord Chat
+Displays various stats about a player including score rank, total score, time played, score/sec, and top 3 hero stats based on score.
 
 Scrapes the https://watcher.gg/ JSON API for statistics.
 
 1. Install node.js and make sure it is available via PATH
 2. Run ``npm install`` in the same folder as package.json
-3. Enter your credentials into app.js. Either a bot token or email and password. (Only use 1 method)
+3. Input a bot token from Discord API. (See https://discordapp.com/developers/applications/me to create your app, ensure you also click Create a Bot User)
 4. Run ``node app.js``
 5. In a Discord channel the bot can read and post in, run ``!ow name#id``
 
