@@ -30,6 +30,7 @@ function round000(number) {
 
 discord.on('ready', () => { //The discord client has connected
     console.log("Successful connection to Discord as '" + discord.user.username + "'");
+    discord.setPlayingGame("watcherbot.net")
 });
 
 //Overwatch stats function
@@ -53,12 +54,32 @@ discord.on('message', (message) => {
             player.score = data.data.heroStats[0].score;
             player.timePlayed = data.data.heroStats[0].timePlayed;
             player.scorePerSecond = player.score / player.timePlayed;
-            player.scoreRank = data.data.ranks[0].ranks.averageScore;
             player.timePlayedHours = player.timePlayed / 3600;
-            let str = "Watcher.gg Stats for **" + tag + "**\n";
-            str += "**Score/sec:** " + round000(player.scorePerSecond) + " **Rank:** #"  + numberWithCommas(player.scoreRank) + "\n";
+            player.heroes = [];
+            player.heroes.sortedByScore = [];
+            for (let i=0; i < data.data.heroStats.length; i++) {
+                if (data.data.heroStats[i].score == 0) { continue };
+                if (data.data.heroStats[i].id == -1) { continue };
+                player.heroes.sortedByScore.push(data.data.heroStats[i]);
+            }
+            player.heroes.sortedByScore.sort(function(a,b){return b.score-a.score});
+            if (data.data.ranks[0].ranks.averageScore == -1) { player.scoreRank = "Unranked" } else { player.scoreRank = "#" + numberWithCommas(data.data.ranks[0].ranks.averageScore) };
+            let str = "Watcher.gg Stats for **" + tag + "** last updated on " + player.lastUpdated + "\n";
+            str += "**Score/sec:** " + round000(player.scorePerSecond) + " **Rank:** "  + player.scoreRank + "\n";
             str += "**Total Score:** " + numberWithCommas(player.score) + " **Total Time Played:** ~" + player.timePlayedHours + " hours\n";
-            str += "View the full page here: " + url_pub;
+            if (player.heroes.sortedByScore.length >= 3) {
+                str += "**Top 3 Heroes by Total Score:**\n";
+                for (let i=0;i < 3; i++) {
+                    str += "**" + (Number(i) + 1) + ".** " + player.heroes.sortedByScore[i].name + " **Score:** " + numberWithCommas(player.heroes.sortedByScore[i].score);
+                    for (let j=0;j < data.data.ranks.length; j++) {
+                        if (data.data.ranks[j].id == player.heroes.sortedByScore[i].id) {
+                            if (data.data.ranks[j].ranks.averageScore != -1) { str += " **Rank** #" + numberWithCommas(data.data.ranks[j].ranks.averageScore)};
+                        };
+                    };
+                    str += "\n";
+                };
+            };
+            str += "\nView the full page here: " + url_pub;
             return discord.sendMessage ( message, str );
         }
     });
