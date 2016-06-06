@@ -4,12 +4,14 @@ Scrapes https://watcher.gg/ JSON API for statistics.
 
 If you want to use this bot on your server without the need to host it yourself, you can use this invite URL: https://discordapp.com/oauth2/authorize?client_id=187656769567326217&scope=bot&permissions=0
 
+#Install
+
 1. Install node.js and make sure it is available via PATH
 2. Run ``npm install`` in the same folder as package.json
 3. Input a bot token from Discord API. (See https://discordapp.com/developers/applications/me to create your app, ensure you also click Create a Bot User)
 4. Run ``node app.js``
 5. In a Discord channel the bot can read and post in, run ``!ow name#id``
 
-Caveats: only works currenty for /us/pc/
+#Credits
 
 This is a fork of https://github.com/dbkynd/discord-overwatch-stats and I'd like to thank dbkynd for a starting point and idea.
