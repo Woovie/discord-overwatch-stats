@@ -12,6 +12,13 @@ If you want to use this bot on your server without the need to host it yourself,
 4. Run ``node app.js``
 5. In a Discord channel the bot can read and post in, run ``!ow name#id``
 
+#To-do list
+Got a request? Comment and I'll be glad to look into it!
+
+- [ ] Add a way to somehow detect Cloudflare's error page since it returns a 200 OK.
+- [ ] Allow EU or KR to use search (Do a loop through regions, searching the ID, until the result is a 200)
+- [ ] Add character specific search to give an outline of all stats for that specific character
+
 #Credits
 
 This is a fork of https://github.com/dbkynd/discord-overwatch-stats and I'd like to thank dbkynd for a starting point and idea.
