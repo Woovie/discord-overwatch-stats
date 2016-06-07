@@ -6,6 +6,7 @@ Github here: https://github.com/dbkynd/discord-overwatch-stats
 
 Forked by Woovie to work with watcher.gg API https://api.watcher.gg/players/pc/us/woovie%231582
 Github here: https://github.com/Woovie/discord-overwatch-stats
+draft build
 */
 
 'use strict';
