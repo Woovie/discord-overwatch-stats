@@ -1,9 +1,8 @@
 {
   "name": "discord-overwatch-stats",
-  "version": "0.0.1",
+  "version": "1.1.1",
   "dependencies": {
-    "cheerio": "^0.20.0",
     "discord.js": "^7.0.1",
-    "request": "^2.72.0"
+    "sync-request": "^3.0.1"
   }
 }
