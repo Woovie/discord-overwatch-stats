@@ -22,13 +22,17 @@ discord.loginWithToken (""); //Login using a Discord 'BOT' account token
 
 //Overwatch specific variables
 var overwatch_prefix = "!ow";
-var base_url = "watcher.gg/players/pc/";
+var base_url = "watcher.gg/";
 var api_prefix = "https://api.";
+var api_postfix = "players/";
 var pub_prefix = "https://";
+var pub_postfix = "profile/";
+var final_postfix = "pc/";
 var regions = ["us", "eu", "kr"];
 var region;
 var tag;
-var final_url;
+var final_api_url;
+var final_pub_url;
 var player_data;
 var player = [];
 
@@ -54,7 +58,8 @@ function numberWithCommas(number) {
 
 //Function for the discord message event
 function discordMessage (message) {
-    final_url = false;
+    final_api_url = false;
+    final_pub_url = false;
     player_data = false;
     region = false;
     tag = false;
@@ -62,13 +67,13 @@ function discordMessage (message) {
     if (!message.content.startsWith(overwatch_prefix)) return;
     tag = message.content.substring(overwatch_prefix.length, message.length).trim();
     if (tag == "") { return tagError(message, -1) };
-    var region_url = api_prefix + base_url;
+    var region_url = api_prefix + base_url + api_postfix + final_postfix;
     for (var i=0; i<regions.length; i++) {
         var test_url = region_url + regions[i] + "/" + tag.replace ("#", "%23");
         var results = request('GET', test_url);
         if (results.statusCode == 200) {
             player_data = JSON.parse(results.getBody());
-            final_url = test_url;
+            final_api_url = test_url;
             region = regions[i];
         }
     }
@@ -77,7 +82,7 @@ function discordMessage (message) {
 
 //Generate player statistics into easy to use variables
 function setupUser (message) {
-    if (final_url) {
+    if (final_api_url) {
         player.level = player_data.data.player.level;
         player.lastUpdated = player_data.data.player.lastUpdated;
         player.score = player_data.data.heroStats[0].score;
@@ -116,7 +121,7 @@ function setupOutput (message) {
         str += "\n";
         };
     };
-    str += "\nView the full page here: " + pub_prefix + base_url + region + "/" + tag.replace ("#", "%23");
+    str += "\nView the full page here: " + pub_prefix + base_url + pub_postfix + final_postfix + region + "/" + tag.replace ("#", "%23");
     return discord.sendMessage ( message, str );
 }
 
