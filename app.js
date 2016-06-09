@@ -54,6 +54,10 @@ function numberWithCommas(number) {
 
 //Function for the discord message event
 function discordMessage (message) {
+    final_url = false;
+    player_data = false;
+    region = false;
+    tag = false;
     if (message.author.id == discord.user.id) return;
     if (!message.content.startsWith(overwatch_prefix)) return;
     tag = message.content.substring(overwatch_prefix.length, message.length).trim();
