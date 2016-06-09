@@ -15,9 +15,9 @@ If you want to use this bot on your server without the need to host it yourself,
 #To-do list
 Got a request? Comment and I'll be glad to look into it!
 
-- [ ] Redo URL building and URI encoding in a cleaner manner for region support.
+- [*] Redo URL building and URI encoding in a cleaner manner for region support.
+- [*] Allow EU or KR to use search (Do a loop through regions, searching the ID, until the result is a 200)
 - [ ] Add a way to somehow detect Cloudflare's error page since it returns a 200 OK.
-- [ ] Allow EU or KR to use search (Do a loop through regions, searching the ID, until the result is a 200)
 - [ ] Add character specific search to give an outline of all stats for that specific character
 
 #Credits
